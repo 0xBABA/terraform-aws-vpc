@@ -79,6 +79,9 @@ resource "aws_subnet" "private_sn" {
 resource "aws_eip" "nat_eip" {
   count = length(var.private_subnet_cidrs)
   vpc   = true
+  tags = {
+    Name = format("%s-eip-${count.index}", var.global_name_prefix)
+  }
 }
 
 ## creating NAT GWs for the private subnets
@@ -88,7 +91,7 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id     = aws_subnet.public_sn.*.id[count.index]
 
   tags = {
-    Name = format("%s-nat_gw-${count.index}", var.global_name_prefix)
+    Name = format("%s-nat-gw-${count.index}", var.global_name_prefix)
   }
 
   # To ensure proper ordering, it is recommended to add an explicit dependency
