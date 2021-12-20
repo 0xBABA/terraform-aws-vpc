@@ -11,8 +11,8 @@
 
 ## creating the vpc
 resource "aws_vpc" "main_vpc" {
-  cidr_block = var.vpc_cidr_block
-
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_hostnames = true
   tags = {
     Name = format("%s-${var.vpc_name}", var.global_name_prefix)
   }
@@ -42,8 +42,8 @@ resource "aws_subnet" "public_sn" {
 
 ## creating route table for public subnets
 resource "aws_route_table" "public_rt" {
-  vpc_id               = aws_vpc.main_vpc.id
-  enable_dns_hostnames = true
+  vpc_id = aws_vpc.main_vpc.id
+
   tags = {
     Name = format("%s-${var.public_route_table_name}", var.global_name_prefix)
   }
